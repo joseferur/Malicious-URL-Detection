@@ -1,0 +1,56 @@
+Malicious URL Detection
+
+This project uses machine learning to classify URLs as benign or malicious. Raw URL data is loaded from a CSV, cleaned and featurized, then split into train/test sets. Multiple classifiers (SVM, k-NN, Random Forest) are trained on the same features and evaluated with standard metrics and visualizations.
+
+Dataset (Kaggle)
+-----------------
+The pipeline expects the input file at data/urldata.csv (columns: number, url, label, result; labels: benign / malicious). This file is not included in the repo.
+
+- Get the dataset from Kaggle: Search for "Malicious URL" or "URL classification" datasets on Kaggle(https://www.kaggle.com/datasets). Download the CSV and place it as data/urldata.csv (create the data/ folder if needed).
+- After adding the file, run data_processing.ipynb to generate the train/test CSVs in code/outputs/.
+
+
+Project Description
+
+The pipeline has two main stages: (1) data_processing.ipynb prepares the dataset and produces train/test CSV files; (2) each model notebook (SVM, k-NN, Random Forest) loads those files, trains a classifier, and reports metrics and plots.
+
+
+data_processing.ipynb
+
+- Input: ../data/urldata.csv (columns: number, url, label, result).
+- Cleaning & labels: Converts labels to binary (0 = benign, 1 = malicious), drops empty/duplicate URLs, and standardizes URLs (lowercase, optional http:// prefix, normalized scheme/netloc/path/query).
+- Feature extraction: Builds 13 numeric features from each URL, including: url_length, host_length, path_length, query_length, count_digits, count_specials, count_upper, count_subdomains, digit_ratio, symbol_ratio, uppercase_ratio, entropy, and is_https.
+- Train/test split: Uses an 80/20 stratified split, then applies StandardScaler to the numeric features (fit on train only).
+- Output: Writes outputs/X_train.csv, outputs/X_test.csv, outputs/y_train.csv, and outputs/y_test.csv for use by the model notebooks.
+
+
+SVM.ipynb
+
+- Input: The CSV files produced by data_processing (X_train, X_test, y_train, y_test).
+- Model: LinearSVC with class_weight="balanced". Hyperparameters are tuned via GridSearchCV with 3-fold StratifiedKFold over C, loss (hinge, squared_hinge), tol, and max_iter; scoring is macro F1.
+- Evaluation: Reports accuracy, precision, recall, F1, macro F1, ROC-AUC, and PR-AUC; prints a classification report and confusion matrix.
+- Visuals: ROC curve, Precision–Recall curve, and confusion matrix heatmap. Optionally saves the best model with joblib.
+
+
+Environment Setup
+
+- Python
+- Required Libraries
+     numpy
+     pandas
+     scikit-learn
+     matplotlib
+     jupyter
+
+
+Files
+
+- data_processing.ipynb
+- SVM.ipynb
+
+
+Run Instructions
+
+- Run data_processing.ipynb to obtain X_test, X_train, y_test, and y_train CSV files in code/outputs/.
+- Run each of the model notebooks (SVM, k-NN, Random Forest).
+- Each model uses the same X and y CSV files and presents outcomes in metric tables and visuals.
