@@ -1,6 +1,7 @@
 Malicious URL Detection
 
-This project uses machine learning to classify URLs as benign or malicious. Raw URL data is loaded from a CSV, cleaned and featurized, then split into train/test sets. Multiple classifiers (SVM, k-NN, Random Forest) are trained on the same features and evaluated with standard metrics and visualizations.
+This project uses machine learning to classify URLs as benign or malicious. Raw URL data is loaded from a CSV, 
+cleaned and featurized, then split into train/test sets. 
 
 Dataset (Kaggle)
 -----------------
